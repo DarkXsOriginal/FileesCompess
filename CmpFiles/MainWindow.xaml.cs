@@ -59,7 +59,7 @@ namespace CmpFiles
                 string ext = Path.GetExtension(file).ToUpper();
                 if (ext == ".PNG")
                 {
-                    CmpFiles.CompressImage(file, destFolder.Path, quality);
+                    Compressor.CompressImage(file, destFolder.Path, quality);
                 }
             }
             MessageBox.Show("Compressed Images have been stored to\n" + destFolder);

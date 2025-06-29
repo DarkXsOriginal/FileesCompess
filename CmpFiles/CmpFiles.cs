@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CmpFiles
 {
-    public class CmpFiles
+    public class Compressor
     {
         public static void CompressImage(string SoucePath, string DestPath, int quality)
         {
