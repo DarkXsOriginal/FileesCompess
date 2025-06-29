@@ -1,0 +1,17 @@
+﻿<Window x:Class="CmpFiles.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CmpFiles"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="btCompress" Content="Cжать" HorizontalAlignment="Left" Margin="342,287,0,0" VerticalAlignment="Top" Width="104" Click="btCompress_Click"/>
+        <TextBlock x:Name="tbDest" HorizontalAlignment="Left" Margin="332,243,0,0" TextWrapping="Wrap" Text="(Выходная папка)" VerticalAlignment="Top" Width="124" RenderTransformOrigin="0.498,0.482"/>
+        <Button x:Name="btDest" Content="Обзор..." HorizontalAlignment="Left" Margin="478,241,0,0" VerticalAlignment="Top" Click="btDest_Click"/>
+        <TextBlock x:Name="tbSource" HorizontalAlignment="Center" Margin="0,201,0,0" TextWrapping="Wrap" Text="(Входная папка)" VerticalAlignment="Top" Width="124"/>
+        <Button x:Name="btSource" Content="Обзор..." HorizontalAlignment="Left" Margin="477,195,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.479,0.604" Width="45" Click="btSource_Click"/>
+            <ComboBox x:Name="cmbQuality" HorizontalAlignment="Left" Margin="353,131,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="cmbQuality_SelectionChanged" RenderTransformOrigin="0.234,1.005" />
+    </Grid>
+</Window>
