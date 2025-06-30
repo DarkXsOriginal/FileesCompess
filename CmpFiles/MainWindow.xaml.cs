@@ -57,12 +57,11 @@ namespace CmpFiles
             foreach (var file in files)
             {
                 string ext = Path.GetExtension(file).ToUpper();
-                if (ext == ".PNG")
-                {
-                    Compressor.CompressImage(file, destFolder.Path, quality);
-                }
+                Compressor.CompressImage(file, destFolder.Path, quality);
             }
-            MessageBox.Show("Compressed Images have been stored to\n" + destFolder);
+            string message = "Сжатые файлы сохранены в папку\n" + destFolder.Path;
+            MessageBox.Show(message);
+            Console.WriteLine(message);
         }
         private void OpenFolderDialog(PathRef filepath)
         {
@@ -98,17 +97,20 @@ namespace CmpFiles
         {
             SelectSourcePath();
             tbSource.Text = sourceFolder.Path;
+            Console.WriteLine("Выбрана исходная папка: "+ sourceFolder.Path);
         }
 
         private void btDest_Click(object sender, RoutedEventArgs e)
         {
             SelectDestPath();
             tbDest.Text = destFolder.Path;
+            Console.WriteLine("Выбрана выходная папка: " + destFolder.Path);
         }
 
         private void cmbQuality_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             quality = (cmbQuality.SelectedItem as IntPercent).Value;
+            Console.WriteLine("Выбрано качество: " + quality.ToString());
         }
 
         private void btCompress_Click(object sender, RoutedEventArgs e)

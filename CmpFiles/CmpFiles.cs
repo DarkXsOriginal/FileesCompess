@@ -13,11 +13,11 @@ namespace CmpFiles
     {
         public static void CompressImage(string SoucePath, string DestPath, int quality)
         {
-            var FileName = Path.GetFileName(SoucePath);
-            DestPath = DestPath + "\\" + FileName;
+            var FileName = Path.GetFileNameWithoutExtension(SoucePath);
+            DestPath = DestPath + "\\" + FileName + ".jpg";
             using (Bitmap bmp1 = new Bitmap(SoucePath))
             {
-                ImageCodecInfo pngEncoder = GetEncoder(ImageFormat.Png);
+                ImageCodecInfo pngEncoder = GetEncoder(ImageFormat.Jpeg);
                 System.Drawing.Imaging.Encoder QualityEncoder = System.Drawing.Imaging.Encoder.Quality;
                 EncoderParameters myEncoderParameters = new EncoderParameters(1);
                 EncoderParameter myEncoderParameter = new EncoderParameter(QualityEncoder, quality);
