@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button x:Name="btCompress" Content="Cжать" HorizontalAlignment="Left" Margin="342,287,0,0" VerticalAlignment="Top" Width="104" Click="btCompress_Click"/>
+        <Button x:Name="btCompress" Content="Cжать" HorizontalAlignment="Left" Margin="361,286,0,0" VerticalAlignment="Top" Width="104" Click="btCompress_Click"/>
         <TextBlock x:Name="tbDest" HorizontalAlignment="Left" Margin="332,243,0,0" TextWrapping="Wrap" Text="(Выходная папка)" VerticalAlignment="Top" Width="124" RenderTransformOrigin="0.498,0.482"/>
         <Button x:Name="btDest" Content="Обзор..." HorizontalAlignment="Left" Margin="478,241,0,0" VerticalAlignment="Top" Click="btDest_Click"/>
         <TextBlock x:Name="tbSource" HorizontalAlignment="Center" Margin="0,201,0,0" TextWrapping="Wrap" Text="(Входная папка)" VerticalAlignment="Top" Width="124"/>

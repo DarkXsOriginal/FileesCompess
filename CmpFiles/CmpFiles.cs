@@ -13,8 +13,46 @@ namespace CmpFiles
     {
         public static void CompressImage(string SoucePath, string DestPath, int quality)
         {
-            var FileName = Path.GetFileNameWithoutExtension(SoucePath);
-            DestPath = DestPath + "\\" + FileName + ".jpg";
+            var fileName = Path.GetFileNameWithoutExtension(SoucePath);
+            string destFilePathWithoutExtension = DestPath + "\\" + fileName;
+            string originalExt = Path.GetExtension(SoucePath);
+            string jpgExt = ".jpg";
+
+            string originalDest = destFilePathWithoutExtension + originalExt;
+            string jpgDest = destFilePathWithoutExtension + jpgExt;
+
+            void justCopy()
+            {
+                Console.WriteLine($"Не удаётся сжать \"{SoucePath}\", скопировано");
+                var ext = Path.GetExtension(SoucePath);
+                File.Copy(SoucePath, originalDest, true);
+            }
+
+            var tempJpg = Path.GetTempFileName() + jpgExt;
+            try
+            {
+                compressImage(SoucePath, tempJpg, 50);
+            }
+            catch
+            {
+                justCopy();
+                return;
+            }
+
+            compressImage(tempJpg, jpgDest, quality);
+            var sourceInfo = new FileInfo(SoucePath);
+            var resultInfo = new FileInfo(jpgDest);
+            if (sourceInfo.Length < resultInfo.Length)
+            {
+                File.Delete(jpgDest);
+                justCopy();
+            }
+            File.Delete(tempJpg);
+
+
+        }
+        private static void compressImage(string SoucePath, string DestPath, int quality)
+        {
             using (Bitmap bmp1 = new Bitmap(SoucePath))
             {
                 ImageCodecInfo pngEncoder = GetEncoder(ImageFormat.Jpeg);
