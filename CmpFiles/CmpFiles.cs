@@ -13,54 +13,76 @@ namespace CmpFiles
 {
     public static class Compressor
     {
-        static void justCopy(string SourcePath, string originalDest,string message)
-            {
-                Console.WriteLine(message);
-                var ext = Path.GetExtension(SourcePath);
-                File.Copy(SourcePath, originalDest, true);
-            }
-
-        public static void CompressImage(string SourcePath, string DestPath, int quality)
+        static void justCopy(string SourcePath, string DestFolder, string message)
         {
-
+            Console.WriteLine(message);
+            var ext = Path.GetExtension(SourcePath);
+            File.Copy(SourcePath, FromPath(SourcePath, DestFolder), true);
+        }
+        static string GetExtension(string SourcePath)
+        {
+            return Path.GetExtension(SourcePath);
+        }
+        static string FromPath(string SourcePath, string DestFolder)
+        {
             var fileName = Path.GetFileNameWithoutExtension(SourcePath);
-            string destFilePathWithoutExtension = DestPath + "\\" + fileName;
-            string originalExt = Path.GetExtension(SourcePath);
-            string jpgExt = ".jpg";
+            string destPath = Path.Combine(DestFolder, fileName)+ GetExtension(SourcePath);
+            return destPath;
 
-            string originalDest = destFilePathWithoutExtension + originalExt;
-            string jpgDest = destFilePathWithoutExtension + jpgExt;
-
-
-            void justCopyCompress()
-            {
-                justCopy(SourcePath, originalDest, $"Не удаётся сжать \"{SourcePath}\", скопировано");
-            }
-
-            var tempJpg = Path.GetTempFileName() + jpgExt;
+        }
+        static bool tryCompressImage(string SourcePath, ref string DestPath)
+        {
+            var _destPath = Path.GetTempFileName() + ".jpg"; ;
             try
             {
-                compressImage(SourcePath, tempJpg, 50);
+                compressImage(SourcePath, _destPath, 50);
+                DestPath = _destPath;
+                var sourceInfo = new FileInfo(SourcePath);
+                var resultInfo = new FileInfo(DestPath);
+                if (sourceInfo.Length < resultInfo.Length)
+                {
+                    File.Delete(_destPath);
+                    return false;
+                }
+                return true;
             }
             catch
             {
-                justCopyCompress();
+                return false;
+            }
+
+        }
+        static bool checkIfImage(string SourcePath)
+        {
+            try
+            {
+                new Bitmap(SourcePath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void CompressImage(string SourcePath, string DestFolder, int quality)
+        {
+            bool isImage = checkIfImage(SourcePath);
+            if (!isImage)
+            {
+                justCopy(SourcePath, DestFolder, $"Файл \"{SourcePath}\" не является изображением, скопировано");
                 return;
             }
-
-            ShrinkImage(SourcePath, tempJpg, quality);
-            compressImage(tempJpg, jpgDest, quality);
-            
-            var sourceInfo = new FileInfo(SourcePath);
-            var resultInfo = new FileInfo(jpgDest);
-            if (sourceInfo.Length < resultInfo.Length)
-            {
-                File.Delete(jpgDest);
-                justCopyCompress();
-            }
-            File.Delete(tempJpg);
-
-
+            string compressedImage = SourcePath;
+            bool isCompressed = tryCompressImage(SourcePath, ref compressedImage);
+            string shrinkedImage = string.Empty;
+            ShrinkImage(compressedImage, ref shrinkedImage, quality);
+            var fileName = Path.GetFileNameWithoutExtension(SourcePath);
+            var destPath = Path.Combine(DestFolder, fileName) + Path.GetExtension(SourcePath);
+            File.Copy(shrinkedImage, destPath);
+            if (isCompressed)
+                File.Delete(compressedImage);
+            File.Delete(shrinkedImage);
         }
         private static void compressImage(string SourcePath, string DestPath, int quality)
         {
@@ -119,36 +141,16 @@ namespace CmpFiles
             return resizedBitmap;
         }
 
-        public static void ShrinkImage(string SourcePath, string DestPath, int quality)
+        static void ShrinkImage(string SourcePath, ref string shrinkedImage, int quality)
         {
+             shrinkedImage = Path.GetTempFileName() + ".jpg"; 
             var fileName = Path.GetFileNameWithoutExtension(SourcePath);
-
-            string destFilePathWithoutExtension = DestPath + "\\" + fileName;
-            string originalExt = Path.GetExtension(SourcePath);
-            string jpgExt = ".jpg";
-
-            string originalDest = destFilePathWithoutExtension + originalExt;
-            string jpgDest = destFilePathWithoutExtension + jpgExt;
-
-
-            void justCopyShrink()
+            Bitmap bitmap;
+            using (Bitmap bmp = new Bitmap(SourcePath))
             {
-                justCopy(SourcePath, originalDest, $"Не удаётся уменьшить \"{SourcePath}\", скопировано");
+                bitmap = ReduceBitmap(bmp, quality);
             }
-
-            try
-            {
-                Bitmap bitmap;
-                using (Bitmap bmp = new Bitmap(SourcePath))
-                {
-                    bitmap = ReduceBitmap(bmp, quality);
-                }
-                bitmap.Save(DestPath, ImageFormat.Jpeg);
-            }
-            catch
-            {
-                justCopyShrink();
-            }
+            bitmap.Save(shrinkedImage, ImageFormat.Jpeg);
         }
     }
 }
